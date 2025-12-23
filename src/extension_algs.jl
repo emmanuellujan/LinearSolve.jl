@@ -75,12 +75,13 @@ sol = solve(prob, alg)
 ```
 """
 struct SLUIRFactorization <: LinearSolve.SciMLLinearSolveAlgorithm
-    function SLUIRFactorization()
+    iterations::Int
+    function SLUIRFactorization(; iterations = 5)
         ext = Base.get_extension(@__MODULE__, :LinearSolveSLUIRExt)
         if ext === nothing
             error("SLUIRFactorization requires that SparseArrays is loaded, i.e. `using SparseArrays`")
         else
-            return new{}()
+            return new{}(iterations)
         end
     end
 end

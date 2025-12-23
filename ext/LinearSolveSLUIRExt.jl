@@ -7,8 +7,9 @@ using LinearAlgebra
 mutable struct SLUIRCache
     n::Int
     r64::Vector{Float64}
-    work32::Vector{Float32}
-    bf32::Vector{Float32}
+    work32::Vector{Float64}
+    bf32::Vector{Float64}
+    x::Vector{Float64}
     F32::Any
 end
 
@@ -18,7 +19,7 @@ function LinearSolve.init_cacheval(
     
     # Lazy initialization: return dummy values.
     # The actual factorization happens in `solve!`
-    return SLUIRCache(0, Float64[], Float32[], Float32[], nothing)
+    return SLUIRCache(0, Float64[], Float64[], Float64[], Float64[], nothing)
 end
 
 function SciMLBase.solve!(cache::LinearSolve.LinearCache, alg::SLUIRFactorization; kwargs...)
@@ -41,6 +42,7 @@ function SciMLBase.solve!(cache::LinearSolve.LinearCache, alg::SLUIRFactorizatio
     r64 = cache.cacheval.r64
     work32 = cache.cacheval.work32
     bf32 = cache.cacheval.bf32
+    x = cache.cacheval.x
     F32 = cache.cacheval.F32
     
     b64 = eltype(cache.b) === Float64 ? cache.b : Vector{Float64}(cache.b)
@@ -53,7 +55,7 @@ function SciMLBase.solve!(cache::LinearSolve.LinearCache, alg::SLUIRFactorizatio
     x = Float64.(xf32)
 
     # Iterative refinement: compute residual in double, solve correction in single, update double solution
-    for _ = 1:5
+    for _ = 1:alg.iterations
         mul!(r64, cache.A, x)                 # r64 = A * x (double)
         @inbounds for i = 1:n
             r64[i] = b64[i] - r64[i]          # r64 = b - A*x
