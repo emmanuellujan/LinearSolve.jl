@@ -15,17 +15,10 @@ end
 function LinearSolve.init_cacheval(
         alg::SLUIRFactorization, A, b, u, Pl, Pr, maxiters::Int, abstol, reltol,
         verbose::Union{Bool, LinearSolve.LinearVerbosity}, assump::LinearSolve.OperatorAssumptions)
-    n = length(b)
-    r64 = Vector{Float64}(undef, n)       # residual buffer (double)
-    work32 = Vector{Float32}(undef, n)    # temp residual in single
-    bf32 = Vector{Float32}(undef, n)      # temp right-hand side in single
-    nz32 = Float32.(A.nzval)
-    Af = SparseMatrixCSC{Float32, Int}(size(A,1), size(A,2),
-                                        copy(A.colptr), copy(A.rowval),
-                                        nz32)
-    F32 = lu(Af)                          # single-precision sparse LU
-
-    return SLUIRCache(n, r64, work32, bf32, F32)
+    
+    # Lazy initialization: return dummy values.
+    # The actual factorization happens in `solve!`
+    return SLUIRCache(0, Float64[], Float32[], Float32[], nothing)
 end
 
 function SciMLBase.solve!(cache::LinearSolve.LinearCache, alg::SLUIRFactorization; kwargs...)
