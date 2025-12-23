@@ -21,6 +21,7 @@ if GROUP == "All" || GROUP == "Core"
     @time @safetestset "BandedMatrices" include("banded.jl")
     @time @safetestset "Butterfly Factorization" include("butterfly.jl")
     @time @safetestset "Mixed Precision" include("test_mixed_precision.jl")
+    @time @safetestset "SLUIR Tests" include("sluir.jl")
 end
 
 # Don't run Enzyme tests on prerelease or Julia >= 1.12 (Enzyme compatibility issues)

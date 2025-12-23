@@ -61,6 +61,31 @@ struct HYPREAlgorithm <: SciMLLinearSolveAlgorithm
     end
 end
 
+
+"""
+`SLUIRFactorization()`
+
+## Example
+
+```julia
+A, b = setup_system(...)
+prob = LinearProblem(A, b)
+alg = SLUIRFactorization()
+sol = solve(prob, alg)
+```
+"""
+struct SLUIRFactorization <: LinearSolve.SciMLLinearSolveAlgorithm
+    function SLUIRFactorization()
+        ext = Base.get_extension(@__MODULE__, :LinearSolveSLUIRExt)
+        if ext === nothing
+            error("SLUIRFactorization requires that SparseArrays is loaded, i.e. `using SparseArrays`")
+        else
+            return new{}()
+        end
+    end
+end
+
+
 # Debug: About to define CudaOffloadLUFactorization
 """
 `CudaOffloadLUFactorization()`

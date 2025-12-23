@@ -29,6 +29,8 @@ function _string_to_algorithm_choice(algorithm_name::Union{String, Nothing})
         return DefaultAlgorithmChoice.MetalLUFactorization  # Now supported as a separate choice
     elseif algorithm_name == "AMDGPUOffloadLUFactorization"
         return DefaultAlgorithmChoice.LUFactorization  # Map to standard LU (AMDGPU extension)
+    elseif algorithm_name == "SLUIRFactorization"
+        return DefaultAlgorithmChoice.SLUIRFactorization
     else
         @warn "Unknown algorithm preference: $algorithm_name, falling back to heuristics"
         return nothing

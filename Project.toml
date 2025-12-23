@@ -74,6 +74,7 @@ LinearSolveMetalExt = "Metal"
 LinearSolveMooncakeExt = "Mooncake"
 LinearSolvePardisoExt = ["Pardiso", "SparseArrays"]
 LinearSolveRecursiveFactorizationExt = "RecursiveFactorization"
+LinearSolveSLUIRExt = "SparseArrays"
 LinearSolveSparseArraysExt = "SparseArrays"
 LinearSolveSparspakExt = ["SparseArrays", "Sparspak"]
 
